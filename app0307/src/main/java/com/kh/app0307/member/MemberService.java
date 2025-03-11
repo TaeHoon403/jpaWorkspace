@@ -1,5 +1,6 @@
 package com.kh.app0307.member;
 
+import com.kh.app0307.board.BoardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,34 @@ public class MemberService {
     }//getMemberAll
 
     // 회원 상세 조회
-    public MemberEntity getMemberByNo(Long no) {
-        return repository.getMemberByNo(no);
+    public MemberDto getMemberByNo(Long no) {
+        MemberEntity entity = repository.getMemberByNo(no);
+        
+        // 조회한 회원정보 entity 를 DTO 로 변환
+        /*MemberDto dto = new MemberDto();
+        dto.setNo(entity.getNo());
+        dto.setId(entity.getId());
+        dto.setPwd(entity.getPwd());
+        dto.setNick(entity.getNick());
+        dto.setEnrollDate(entity.getEnrollDate());
+        dto.setModifyDate(entity.getModifyDate());
+
+        List<BoardDto> boardDtoList = entity
+                .getBoardList()
+                .stream()
+                .map(boardEntity -> {
+                    BoardDto boardDto = new BoardDto();
+                    boardDto.setNo(boardEntity.getNo());
+                    boardDto.setTitle(boardEntity.getTitle());
+                    boardDto.setContent(boardEntity.getContent());
+                    boardDto.setWriterNo(boardEntity.getMemberEntity().getNo());
+                    return boardDto;
+                }).toList();
+
+        dto.setBoardDtoList(boardDtoList);
+        return dto; */
+        return new MemberDto(entity);
+
     }//getMemberByNo
 
     // 회원 상세 조회 by ID
@@ -41,14 +68,14 @@ public class MemberService {
     // 회원 삭제
     public void removeMember(Long no) {
         // 삭제할 회원 정보 가져오기
-        MemberEntity member = getMemberByNo(no);
+        MemberEntity member = repository.getMemberByNo(no);
         // 회원 정보 삭제
         repository.removeMember(member);
     }//removeMember
 
     // 회원 정보 수정
     public void updateMember(MemberDto member) {
-        MemberEntity entity = getMemberByNo(member.getNo());
+        MemberEntity entity = repository.getMemberByNo(member.getNo());
         entity.setPwd(member.getPwd());
         entity.setNick(member.getNick());
     }//updateMember

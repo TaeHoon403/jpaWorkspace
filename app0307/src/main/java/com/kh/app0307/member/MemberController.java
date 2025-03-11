@@ -26,7 +26,7 @@ public class MemberController {
 
     // 회원 상세 조회
     @GetMapping("{no}")
-    public MemberEntity getMemberByNo(@PathVariable Long no){
+    public MemberDto getMemberByNo(@PathVariable Long no){
         return service.getMemberByNo(no);
     }//getMemberByNo
 
